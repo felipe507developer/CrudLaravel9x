@@ -1,31 +1,20 @@
 @section('title', 'Show Info')
 
-@section('title', 'Inicio')
-
 @extends('layouts.app')
 
 @section('content')
     <div class="container">
-        <label for="">
-            Name: {{ $empleado->name }}
-        </label>
-        <br>
-        <label for="">
-            LastName: {{ $empleado->lastname }}
-        </label>
-        <br>
-        <label for="">
-            Age: {{ $empleado->age }}
-        </label>
-        <br>
-        <label for="">
-            Photo:
-            <label for="">{{ $empleado->photo }}</label>
+        <div class="card shadow" style="width: 18rem;">
+            <img width="100" height="150" src="{{ asset('storage') . '/' . $empleado->photo }}" class="card-img-top" alt="...">
+            <div class="card-body">
 
-        </label>
-        <img width="100" height="100" src="{{ asset('storage') . '/' . $empleado->photo }}" alt="">
-        <br><br>
+              <p class="card-title"><strong>Name: </strong>{{ $empleado->name }} </p>
+              <p><strong>LastName: </strong> {{ $empleado->lastname }}</p>
+              <p class="card-text"><strong>Age:</strong> {{ $empleado->age }}</p>
+              <a class="btn btn-primary" href="{{ route('empleado.edit', $empleado) }}">Editar información</a>
 
-        <a href="{{ route('empleado.edit', $empleado) }}">Editar información</a>
+            </div>
+          </div>
+
     </div>
 @endsection

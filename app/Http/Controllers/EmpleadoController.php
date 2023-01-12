@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\EmpleadosStore;
 use App\Models\Empleado;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -35,8 +36,9 @@ class EmpleadoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(EmpleadosStore $request)
     {
+
         $datos = request()->all();
         if($request->hasFile('photo')){
             $datos['photo'] = $request->file('photo')->store('uploads', 'public');
@@ -76,8 +78,17 @@ class EmpleadoController extends Controller
      */
     public function update(Request $request, Empleado $empleado)
     {
+        $request->validate([
+            'name' => 'required|string',
+            'lastname' => 'required|string',
+            'age' => 'required|numeric',
+        ]);
+
         $datos = $request->all();
         if($request->hasFile('photo')){
+            $request->validate([
+                'photo' => 'mimes:jpg, jpeg, png'
+            ]);
 
             $temporal_user_url_photo = Empleado::findOrFail($empleado->id, ['photo']);
             if(Storage::delete('public/'.$temporal_user_url_photo->photo)){
