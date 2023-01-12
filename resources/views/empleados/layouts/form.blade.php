@@ -29,5 +29,5 @@
 
 <br>
 <div class="mb-3">
-    <button type="submit">{{$modo}} información</button>
+    <button class="btn btn-success" type="submit">{{$modo}} información</button>
 </div>

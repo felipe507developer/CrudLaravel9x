@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Empleado;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class EmpleadoController extends Controller
 {
@@ -14,7 +15,7 @@ class EmpleadoController extends Controller
      */
     public function index()
     {
-        $employees = Empleado::all();
+      $employees = Empleado::all();
        return view('empleados.index', compact('employees'));
     }
 
@@ -52,7 +53,7 @@ class EmpleadoController extends Controller
      */
     public function show(Empleado $empleado)
     {
-        //
+        return view('empleados.show', compact('empleado'));
     }
 
     /**
@@ -63,7 +64,7 @@ class EmpleadoController extends Controller
      */
     public function edit(Empleado $empleado)
     {
-        //
+        return view('empleados.edit', compact('empleado'));
     }
 
     /**
@@ -75,7 +76,17 @@ class EmpleadoController extends Controller
      */
     public function update(Request $request, Empleado $empleado)
     {
-        //
+        $datos = $request->all();
+        if($request->hasFile('photo')){
+
+            $temporal_user_url_photo = Empleado::findOrFail($empleado->id, ['photo']);
+            if(Storage::delete('public/'.$temporal_user_url_photo->photo)){
+                $datos['photo'] = $request->file('photo')->store('uploads', 'public');
+            }
+        }
+        $empleado->update($datos);
+
+        return redirect()->route('empleado.show', $empleado);
     }
 
     /**
@@ -86,6 +97,10 @@ class EmpleadoController extends Controller
      */
     public function destroy(Empleado $empleado)
     {
-        //
+        if(Storage::delete('public/'.$empleado->photo)){
+            $empleado->delete();
+        }
+
+        return redirect()->route('empleado.index');
     }
 }
